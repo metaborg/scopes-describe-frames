@@ -1,0 +1,233 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>langs.L3.syntax</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library langs.L3.syntax</h1>
+
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Export</span> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.ZArith.ZArith.html#"><span class="id" title="library">ZArith</span></a> <a class="idref" href="framework.scopes.html#"><span class="id" title="library">scopes</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab44"></a><h1 class="section">L3 Syntax</h1>
+
+<div class="paragraph"> </div>
+
+ Corresponds to paper Fig. 23 (with some extensions). 
+<div class="paragraph"> </div>
+
+ Types 
+</div>
+<div class="code">
+<span class="id" title="keyword">Inductive</span> <a name="T"><span class="id" title="inductive">T</span></a> :=<br/>
+| <a name="Tint"><span class="id" title="constructor">Tint</span></a> : <a class="idref" href="langs.L3.syntax.html#T"><span class="id" title="inductive">T</span></a><br/>
+| <a name="Tbool"><span class="id" title="constructor">Tbool</span></a>: <a class="idref" href="langs.L3.syntax.html#T"><span class="id" title="inductive">T</span></a><br/>
+| <a name="Tarrow"><span class="id" title="constructor">Tarrow</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#list"><span class="id" title="inductive">list</span></a> <a class="idref" href="langs.L3.syntax.html#T"><span class="id" title="inductive">T</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="langs.L3.syntax.html#T"><span class="id" title="inductive">T</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="langs.L3.syntax.html#T"><span class="id" title="inductive">T</span></a><br/>
+| <a name="Tclass"><span class="id" title="constructor">Tclass</span></a> : <a class="idref" href="framework.scopes.html#D"><span class="id" title="inductive">D</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="langs.L3.syntax.html#T"><span class="id" title="inductive">T</span></a><br/>
+| <a name="TclassDef"><span class="id" title="constructor">TclassDef</span></a> : <a class="idref" href="framework.scopes.html#D"><span class="id" title="inductive">D</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="langs.L3.syntax.html#T"><span class="id" title="inductive">T</span></a><br/>
+.<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <a name="pre_exp"><span class="id" title="inductive">pre_exp</span></a> :=<br/>
+| <a name="CNum"><span class="id" title="constructor">CNum</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Numbers.BinNums.html#Z"><span class="id" title="inductive">Z</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="langs.L3.syntax.html#pre_exp"><span class="id" title="inductive">pre_exp</span></a><br/>
+| <a name="CTrue"><span class="id" title="constructor">CTrue</span></a> : <a class="idref" href="langs.L3.syntax.html#pre_exp"><span class="id" title="inductive">pre_exp</span></a><br/>
+| <a name="CFalse"><span class="id" title="constructor">CFalse</span></a> : <a class="idref" href="langs.L3.syntax.html#pre_exp"><span class="id" title="inductive">pre_exp</span></a><br/>
+| <a name="Plus"><span class="id" title="constructor">Plus</span></a> : <a class="idref" href="langs.L3.syntax.html#exp"><span class="id" title="inductive">exp</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="langs.L3.syntax.html#exp"><span class="id" title="inductive">exp</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="langs.L3.syntax.html#pre_exp"><span class="id" title="inductive">pre_exp</span></a><br/>
+| <a name="Gt"><span class="id" title="constructor">Gt</span></a> : <a class="idref" href="langs.L3.syntax.html#exp"><span class="id" title="inductive">exp</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="langs.L3.syntax.html#exp"><span class="id" title="inductive">exp</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="langs.L3.syntax.html#pre_exp"><span class="id" title="inductive">pre_exp</span></a><br/>
+| <a name="Lhs"><span class="id" title="constructor">Lhs</span></a> : <a class="idref" href="langs.L3.syntax.html#lhs"><span class="id" title="inductive">lhs</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="langs.L3.syntax.html#pre_exp"><span class="id" title="inductive">pre_exp</span></a><br/>
+| <a name="Fn"><span class="id" title="constructor">Fn</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#list"><span class="id" title="inductive">list</span></a> <a class="idref" href="framework.scopes.html#D"><span class="id" title="inductive">D</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="langs.L3.syntax.html#exp"><span class="id" title="inductive">exp</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="langs.L3.syntax.html#pre_exp"><span class="id" title="inductive">pre_exp</span></a><br/>
+| <a name="App"><span class="id" title="constructor">App</span></a> : <a class="idref" href="langs.L3.syntax.html#exp"><span class="id" title="inductive">exp</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#list"><span class="id" title="inductive">list</span></a> <a class="idref" href="langs.L3.syntax.html#exp"><span class="id" title="inductive">exp</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="langs.L3.syntax.html#pre_exp"><span class="id" title="inductive">pre_exp</span></a><br/>
+| <a name="LetPar"><span class="id" title="constructor">LetPar</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#list"><span class="id" title="inductive">list</span></a> <a class="idref" href="langs.L3.syntax.html#binder"><span class="id" title="inductive">binder</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="langs.L3.syntax.html#exp"><span class="id" title="inductive">exp</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="langs.L3.syntax.html#pre_exp"><span class="id" title="inductive">pre_exp</span></a><br/>
+| <a name="LetSeq"><span class="id" title="constructor">LetSeq</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#list"><span class="id" title="inductive">list</span></a> <a class="idref" href="langs.L3.syntax.html#binder"><span class="id" title="inductive">binder</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="langs.L3.syntax.html#exp"><span class="id" title="inductive">exp</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="langs.L3.syntax.html#pre_exp"><span class="id" title="inductive">pre_exp</span></a><br/>
+| <a name="LetRec"><span class="id" title="constructor">LetRec</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#list"><span class="id" title="inductive">list</span></a> <a class="idref" href="langs.L3.syntax.html#binder"><span class="id" title="inductive">binder</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="langs.L3.syntax.html#exp"><span class="id" title="inductive">exp</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="langs.L3.syntax.html#pre_exp"><span class="id" title="inductive">pre_exp</span></a><br/>
+| <a name="Asgn"><span class="id" title="constructor">Asgn</span></a> : <a class="idref" href="langs.L3.syntax.html#lhs"><span class="id" title="inductive">lhs</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="langs.L3.syntax.html#exp"><span class="id" title="inductive">exp</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="langs.L3.syntax.html#pre_exp"><span class="id" title="inductive">pre_exp</span></a><br/>
+| <a name="If"><span class="id" title="constructor">If</span></a> : <a class="idref" href="langs.L3.syntax.html#exp"><span class="id" title="inductive">exp</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="langs.L3.syntax.html#exp"><span class="id" title="inductive">exp</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="langs.L3.syntax.html#exp"><span class="id" title="inductive">exp</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="langs.L3.syntax.html#pre_exp"><span class="id" title="inductive">pre_exp</span></a><br/>
+| <a name="Seq"><span class="id" title="constructor">Seq</span></a> : <a class="idref" href="langs.L3.syntax.html#exp"><span class="id" title="inductive">exp</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="langs.L3.syntax.html#exp"><span class="id" title="inductive">exp</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="langs.L3.syntax.html#pre_exp"><span class="id" title="inductive">pre_exp</span></a><br/>
+| <a name="New"><span class="id" title="constructor">New</span></a> : <a class="idref" href="framework.scopes.html#R"><span class="id" title="inductive">R</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="langs.L3.syntax.html#pre_exp"><span class="id" title="inductive">pre_exp</span></a><br/>
+| <a name="With"><span class="id" title="constructor">With</span></a> : <a class="idref" href="langs.L3.syntax.html#exp"><span class="id" title="inductive">exp</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="langs.L3.syntax.html#exp"><span class="id" title="inductive">exp</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="langs.L3.syntax.html#pre_exp"><span class="id" title="inductive">pre_exp</span></a><br/>
+<br/>
+<span class="id" title="keyword">with</span> <a name="lhs"><span class="id" title="inductive">lhs</span></a> :=<br/>
+| <a name="Var"><span class="id" title="constructor">Var</span></a> : <a class="idref" href="framework.scopes.html#R"><span class="id" title="inductive">R</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="langs.L3.syntax.html#lhs"><span class="id" title="inductive">lhs</span></a><br/>
+| <a name="Field"><span class="id" title="constructor">Field</span></a> : <a class="idref" href="langs.L3.syntax.html#exp"><span class="id" title="inductive">exp</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="framework.scopes.html#R"><span class="id" title="inductive">R</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="langs.L3.syntax.html#lhs"><span class="id" title="inductive">lhs</span></a><br/>
+<br/>
+<span class="id" title="keyword">with</span> <a name="binder"><span class="id" title="inductive">binder</span></a> :=<br/>
+| <a name="Binder"><span class="id" title="constructor">Binder</span></a> : <a class="idref" href="framework.scopes.html#D"><span class="id" title="inductive">D</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="langs.L3.syntax.html#exp"><span class="id" title="inductive">exp</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="langs.L3.syntax.html#binder"><span class="id" title="inductive">binder</span></a><br/>
+<br/>
+</div>
+
+<div class="doc">
+Initializer expressions are references, referring to the
+declaration to be initialized with the value given by evaluating
+<span class="inlinecode"><a class="idref" href="langs.L3.syntax.html#exp"><span class="id" title="inductive">exp</span></a></span>. 
+</div>
+<div class="code">
+<span class="id" title="keyword">with</span> <a name="initializer"><span class="id" title="inductive">initializer</span></a> :=<br/>
+| <a name="Initializer"><span class="id" title="constructor">Initializer</span></a> : <a class="idref" href="framework.scopes.html#R"><span class="id" title="inductive">R</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="langs.L3.syntax.html#exp"><span class="id" title="inductive">exp</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="langs.L3.syntax.html#initializer"><span class="id" title="inductive">initializer</span></a><br/>
+<br/>
+<span class="id" title="keyword">with</span> <a name="exp"><span class="id" title="inductive">exp</span></a> :=<br/>
+| <a name="E"><span class="id" title="constructor">E</span></a> : <a class="idref" href="framework.scopes.html#ScopeId"><span class="id" title="definition">ScopeId</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="langs.L3.syntax.html#T"><span class="id" title="inductive">T</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="langs.L3.syntax.html#pre_exp"><span class="id" title="inductive">pre_exp</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="langs.L3.syntax.html#exp"><span class="id" title="inductive">exp</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a name="expScope"><span class="id" title="definition">expScope</span></a> (<span class="id" title="var">e</span> : <a class="idref" href="langs.L3.syntax.html#exp"><span class="id" title="inductive">exp</span></a>) : <a class="idref" href="framework.scopes.html#ScopeId"><span class="id" title="definition">ScopeId</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="langs.L3.syntax.html#e"><span class="id" title="variable">e</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="langs.L3.syntax.html#E"><span class="id" title="constructor">E</span></a> <span class="id" title="var">s</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> ⇒ <span class="id" title="var">s</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+<span class="id" title="keyword">Definition</span> <a name="expType"><span class="id" title="definition">expType</span></a> (<span class="id" title="var">e</span> : <a class="idref" href="langs.L3.syntax.html#exp"><span class="id" title="inductive">exp</span></a>) : <a class="idref" href="langs.L3.syntax.html#T"><span class="id" title="inductive">T</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="langs.L3.syntax.html#e"><span class="id" title="variable">e</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="langs.L3.syntax.html#E"><span class="id" title="constructor">E</span></a> <span class="id" title="var">_</span> <span class="id" title="var">t</span> <span class="id" title="var">_</span> ⇒ <span class="id" title="var">t</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a name="initRef"><span class="id" title="definition">initRef</span></a> (<span class="id" title="var">i</span> : <a class="idref" href="langs.L3.syntax.html#initializer"><span class="id" title="inductive">initializer</span></a>) :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="langs.L3.syntax.html#i"><span class="id" title="variable">i</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="langs.L3.syntax.html#Initializer"><span class="id" title="constructor">Initializer</span></a> <span class="id" title="var">r</span> <span class="id" title="var">_</span> ⇒ <span class="id" title="var">r</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+<span class="id" title="keyword">Definition</span> <a name="initExp"><span class="id" title="definition">initExp</span></a> (<span class="id" title="var">i</span> : <a class="idref" href="langs.L3.syntax.html#initializer"><span class="id" title="inductive">initializer</span></a>) :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="langs.L3.syntax.html#i"><span class="id" title="variable">i</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="langs.L3.syntax.html#Initializer"><span class="id" title="constructor">Initializer</span></a> <span class="id" title="var">_</span> <span class="id" title="var">e</span> ⇒ <span class="id" title="var">e</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Class type fields are compactly represented as an optional
+<span class="inlinecode"><a class="idref" href="framework.scopes.html#D"><span class="id" title="inductive">D</span></a></span>eclaration, <span class="inlinecode"><a class="idref" href="langs.L3.syntax.html#T"><span class="id" title="inductive">T</span></a></span>ype pair, and an <span class="inlinecode"><a class="idref" href="langs.L3.syntax.html#initializer"><span class="id" title="inductive">initializer</span></a></span>.
+
+<div class="paragraph"> </div>
+
+Fields that have some <span class="inlinecode">(<a class="idref" href="framework.scopes.html#D"><span class="id" title="inductive">D</span></a></span> <span class="inlinecode">×</span> <span class="inlinecode"><a class="idref" href="langs.L3.syntax.html#T"><span class="id" title="inductive">T</span></a>)</span> pair represent field <i>declarations</i>,
+whereas fields that do not have such a pair represent an initializer
+for fields in a parent class. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Inductive</span> <a name="fld_decl"><span class="id" title="inductive">fld_decl</span></a> :=<br/>
+| <a name="FldDecl"><span class="id" title="constructor">FldDecl</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#option"><span class="id" title="inductive">option</span></a> (<a class="idref" href="framework.scopes.html#D"><span class="id" title="inductive">D</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#d19c7eafd0e2d195d10df94b392087b5"><span class="id" title="notation">×</span></a> <a class="idref" href="langs.L3.syntax.html#T"><span class="id" title="inductive">T</span></a>) <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="langs.L3.syntax.html#initializer"><span class="id" title="inductive">initializer</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="langs.L3.syntax.html#fld_decl"><span class="id" title="inductive">fld_decl</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a name="fldDT"><span class="id" title="definition">fldDT</span></a> (<span class="id" title="var">f</span>: <a class="idref" href="langs.L3.syntax.html#fld_decl"><span class="id" title="inductive">fld_decl</span></a>) :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="langs.L3.syntax.html#f"><span class="id" title="variable">f</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="langs.L3.syntax.html#FldDecl"><span class="id" title="constructor">FldDecl</span></a> <span class="id" title="var">optdt</span> <span class="id" title="var">_</span> ⇒ <span class="id" title="var">optdt</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a name="fldI"><span class="id" title="definition">fldI</span></a> (<span class="id" title="var">f</span>: <a class="idref" href="langs.L3.syntax.html#fld_decl"><span class="id" title="inductive">fld_decl</span></a>) :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="langs.L3.syntax.html#f"><span class="id" title="variable">f</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="langs.L3.syntax.html#FldDecl"><span class="id" title="constructor">FldDecl</span></a> <span class="id" title="var">_</span> <span class="id" title="var">i</span> ⇒ <span class="id" title="var">i</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Class definitions: a <span class="inlinecode"><a class="idref" href="framework.scopes.html#D"><span class="id" title="inductive">D</span></a></span>eclaration that uniquely identifies the
+class, an optional <span class="inlinecode"><a class="idref" href="framework.scopes.html#R"><span class="id" title="inductive">R</span></a></span>eference to a parent class, and a list of class
+type field declarations 
+</div>
+<div class="code">
+<span class="id" title="keyword">Inductive</span> <a name="decl"><span class="id" title="inductive">decl</span></a> :=<br/>
+| <a name="Cdef"><span class="id" title="constructor">Cdef</span></a> : <a class="idref" href="framework.scopes.html#ScopeId"><span class="id" title="definition">ScopeId</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="framework.scopes.html#D"><span class="id" title="inductive">D</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#option"><span class="id" title="inductive">option</span></a> <a class="idref" href="framework.scopes.html#R"><span class="id" title="inductive">R</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#list"><span class="id" title="inductive">list</span></a> <a class="idref" href="langs.L3.syntax.html#fld_decl"><span class="id" title="inductive">fld_decl</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="langs.L3.syntax.html#decl"><span class="id" title="inductive">decl</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+A program consists of a list of class type declarations and an
+expression to be evaluated 
+</div>
+<div class="code">
+<span class="id" title="keyword">Inductive</span> <a name="prog"><span class="id" title="inductive">prog</span></a> :=<br/>
+| <a name="Prog"><span class="id" title="constructor">Prog</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#list"><span class="id" title="inductive">list</span></a> <a class="idref" href="langs.L3.syntax.html#decl"><span class="id" title="inductive">decl</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="langs.L3.syntax.html#exp"><span class="id" title="inductive">exp</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="langs.L3.syntax.html#prog"><span class="id" title="inductive">prog</span></a>. 
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab45"></a><h1 class="section">Auxiliary definitions</h1>
+
+<div class="paragraph"> </div>
+
+ Distinguishing value expressions. Used for type-checking
+<span class="inlinecode"><a class="idref" href="langs.L3.syntax.html#LetRec"><span class="id" title="constructor">LetRec</span></a></span>s, to avoid black hole semantics of self-referential
+let-bindings. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a name="is_val"><span class="id" title="definition">is_val</span></a> <span class="id" title="var">e</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="langs.L3.syntax.html#e"><span class="id" title="variable">e</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="langs.L3.syntax.html#E"><span class="id" title="constructor">E</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">e'</span> ⇒<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">e'</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="langs.L3.syntax.html#CNum"><span class="id" title="constructor">CNum</span></a> <span class="id" title="var">_</span> ⇒ <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#True"><span class="id" title="inductive">True</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="langs.L3.syntax.html#CTrue"><span class="id" title="constructor">CTrue</span></a> ⇒ <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#True"><span class="id" title="inductive">True</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="langs.L3.syntax.html#CFalse"><span class="id" title="constructor">CFalse</span></a> ⇒ <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#True"><span class="id" title="inductive">True</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="langs.L3.syntax.html#Fn"><span class="id" title="constructor">Fn</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> ⇒ <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#True"><span class="id" title="inductive">True</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">_</span> ⇒ <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#False"><span class="id" title="inductive">False</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Some helpers for working with binders and initializers 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a name="split_b"><span class="id" title="definition">split_b</span></a> (<span class="id" title="var">b</span>: <a class="idref" href="langs.L3.syntax.html#binder"><span class="id" title="inductive">binder</span></a>) :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="langs.L3.syntax.html#b"><span class="id" title="variable">b</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="langs.L3.syntax.html#Binder"><span class="id" title="constructor">Binder</span></a> <span class="id" title="var">d</span> <span class="id" title="var">e</span> ⇒ <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#44400027531d4bc3f586a1997dc874c0"><span class="id" title="notation">(</span></a><span class="id" title="var">d</span><a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#44400027531d4bc3f586a1997dc874c0"><span class="id" title="notation">,</span></a> <span class="id" title="var">e</span><a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#44400027531d4bc3f586a1997dc874c0"><span class="id" title="notation">)</span></a><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+<span class="id" title="keyword">Definition</span> <a name="split_i"><span class="id" title="definition">split_i</span></a> (<span class="id" title="var">i</span>: <a class="idref" href="langs.L3.syntax.html#initializer"><span class="id" title="inductive">initializer</span></a>) :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="langs.L3.syntax.html#i"><span class="id" title="variable">i</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="langs.L3.syntax.html#Initializer"><span class="id" title="constructor">Initializer</span></a> <span class="id" title="var">r</span> <span class="id" title="var">e</span> ⇒ <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#44400027531d4bc3f586a1997dc874c0"><span class="id" title="notation">(</span></a><span class="id" title="var">r</span><a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#44400027531d4bc3f586a1997dc874c0"><span class="id" title="notation">,</span></a> <span class="id" title="var">e</span><a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#44400027531d4bc3f586a1997dc874c0"><span class="id" title="notation">)</span></a><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+<span class="id" title="keyword">Definition</span> <a name="split_f"><span class="id" title="definition">split_f</span></a> (<span class="id" title="var">f</span>: <a class="idref" href="langs.L3.syntax.html#fld_decl"><span class="id" title="inductive">fld_decl</span></a>) :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="langs.L3.syntax.html#f"><span class="id" title="variable">f</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="langs.L3.syntax.html#FldDecl"><span class="id" title="constructor">FldDecl</span></a> <span class="id" title="var">_</span> <span class="id" title="var">i</span> ⇒ <a class="idref" href="langs.L3.syntax.html#split_i"><span class="id" title="definition">split_i</span></a> <span class="id" title="var">i</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <a name="unzip"><span class="id" title="definition">unzip</span></a> {<span class="id" title="var">C</span> <span class="id" title="var">T1</span> <span class="id" title="var">T2</span>} {<span class="id" title="tactic">split</span>: <a class="idref" href="langs.L3.syntax.html#C"><span class="id" title="variable">C</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">(</span></a><a class="idref" href="langs.L3.syntax.html#T1"><span class="id" title="variable">T1</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#d19c7eafd0e2d195d10df94b392087b5"><span class="id" title="notation">×</span></a> <a class="idref" href="langs.L3.syntax.html#T2"><span class="id" title="variable">T2</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">)</span></a>} (<span class="id" title="var">l</span>: <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#list"><span class="id" title="inductive">list</span></a> <a class="idref" href="langs.L3.syntax.html#C"><span class="id" title="variable">C</span></a>) : (<a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#list"><span class="id" title="inductive">list</span></a> <a class="idref" href="langs.L3.syntax.html#T1"><span class="id" title="variable">T1</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#d19c7eafd0e2d195d10df94b392087b5"><span class="id" title="notation">×</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#list"><span class="id" title="inductive">list</span></a> <a class="idref" href="langs.L3.syntax.html#T2"><span class="id" title="variable">T2</span></a>) :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="langs.L3.syntax.html#l"><span class="id" title="variable">l</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">c</span> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#0a8150c3c4df34d205c5ed9a427e2ed5"><span class="id" title="notation">::</span></a> <span class="id" title="var">cs</span> ⇒<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">let</span> (<span class="id" title="var">t1</span>,<span class="id" title="var">t2</span>) := <a class="idref" href="langs.L3.syntax.html#split"><span class="id" title="variable">split</span></a> <span class="id" title="var">c</span> <span class="id" title="keyword">in</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">let</span>  <span class="id" title="var">t1t2s</span> := @<a class="idref" href="langs.L3.syntax.html#unzip"><span class="id" title="definition">unzip</span></a> <a class="idref" href="langs.L3.syntax.html#C"><span class="id" title="variable">C</span></a> <a class="idref" href="langs.L3.syntax.html#T1"><span class="id" title="variable">T1</span></a> <a class="idref" href="langs.L3.syntax.html#T2"><span class="id" title="variable">T2</span></a> <a class="idref" href="langs.L3.syntax.html#split"><span class="id" title="variable">split</span></a> <span class="id" title="var">cs</span> <span class="id" title="keyword">in</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#44400027531d4bc3f586a1997dc874c0"><span class="id" title="notation">(</span></a><a class="idref" href="langs.L3.syntax.html#t1"><span class="id" title="variable">t1</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#0a8150c3c4df34d205c5ed9a427e2ed5"><span class="id" title="notation">::</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#0a8150c3c4df34d205c5ed9a427e2ed5"><span class="id" title="notation">(</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#fst"><span class="id" title="definition">fst</span></a> <a class="idref" href="langs.L3.syntax.html#t1t2s"><span class="id" title="variable">t1t2s</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#0a8150c3c4df34d205c5ed9a427e2ed5"><span class="id" title="notation">)</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#44400027531d4bc3f586a1997dc874c0"><span class="id" title="notation">,</span></a> <a class="idref" href="langs.L3.syntax.html#t2"><span class="id" title="variable">t2</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#0a8150c3c4df34d205c5ed9a427e2ed5"><span class="id" title="notation">::</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#0a8150c3c4df34d205c5ed9a427e2ed5"><span class="id" title="notation">(</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#snd"><span class="id" title="definition">snd</span></a> <a class="idref" href="langs.L3.syntax.html#t1t2s"><span class="id" title="variable">t1t2s</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#0a8150c3c4df34d205c5ed9a427e2ed5"><span class="id" title="notation">)</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#44400027531d4bc3f586a1997dc874c0"><span class="id" title="notation">)</span></a><br/>
+&nbsp;&nbsp;| <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Lists.List.html#145bedf8a5d4a541831f3f70db03085c"><span class="id" title="notation">[]</span></a> ⇒ <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#44400027531d4bc3f586a1997dc874c0"><span class="id" title="notation">(</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Lists.List.html#145bedf8a5d4a541831f3f70db03085c"><span class="id" title="notation">[]</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#44400027531d4bc3f586a1997dc874c0"><span class="id" title="notation">,</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Lists.List.html#145bedf8a5d4a541831f3f70db03085c"><span class="id" title="notation">[]</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#44400027531d4bc3f586a1997dc874c0"><span class="id" title="notation">)</span></a><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Unzipping sequences of binders, initializers, and field
+declarations. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a name="unzipb"><span class="id" title="definition">unzipb</span></a> := @<a class="idref" href="langs.L3.syntax.html#unzip"><span class="id" title="definition">unzip</span></a> <a class="idref" href="langs.L3.syntax.html#binder"><span class="id" title="inductive">binder</span></a> <a class="idref" href="framework.scopes.html#D"><span class="id" title="inductive">D</span></a> <a class="idref" href="langs.L3.syntax.html#exp"><span class="id" title="inductive">exp</span></a> <a class="idref" href="langs.L3.syntax.html#split_b"><span class="id" title="definition">split_b</span></a>.<br/>
+<span class="id" title="keyword">Definition</span> <a name="unzipi"><span class="id" title="definition">unzipi</span></a> := @<a class="idref" href="langs.L3.syntax.html#unzip"><span class="id" title="definition">unzip</span></a> <a class="idref" href="langs.L3.syntax.html#initializer"><span class="id" title="inductive">initializer</span></a> <a class="idref" href="framework.scopes.html#R"><span class="id" title="inductive">R</span></a> <a class="idref" href="langs.L3.syntax.html#exp"><span class="id" title="inductive">exp</span></a> <a class="idref" href="langs.L3.syntax.html#split_i"><span class="id" title="definition">split_i</span></a>.<br/>
+<span class="id" title="keyword">Definition</span> <a name="unzipf"><span class="id" title="definition">unzipf</span></a> := @<a class="idref" href="langs.L3.syntax.html#unzip"><span class="id" title="definition">unzip</span></a> <a class="idref" href="langs.L3.syntax.html#fld_decl"><span class="id" title="inductive">fld_decl</span></a> <a class="idref" href="framework.scopes.html#R"><span class="id" title="inductive">R</span></a> <a class="idref" href="langs.L3.syntax.html#exp"><span class="id" title="inductive">exp</span></a> <a class="idref" href="langs.L3.syntax.html#split_f"><span class="id" title="definition">split_f</span></a>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

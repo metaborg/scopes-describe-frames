@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>framework.prop_fold</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library framework.prop_fold</h1>
+
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Lists.List.html#"><span class="id" title="library">List</span></a>.<br/>
+<span class="id" title="keyword">Import</span> <span class="id" title="var">ListNotations</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Propositional folding of a relation <span class="inlinecode"><a class="idref" href="framework.scopes.html#R"><span class="id" title="inductive">R</span></a></span> over two lists.
+
+<div class="paragraph"> </div>
+
+<span class="inlinecode"><a class="idref" href="framework.scopes.html#R"><span class="id" title="inductive">R</span></a></span> is a relation which takes two elements of type <span class="inlinecode"><a class="idref" href="framework.maps.html#X"><span class="id" title="variable">X</span></a></span> and <span class="inlinecode"><a class="idref" href="framework.maps.html#Y"><span class="id" title="variable">Y</span></a></span>, and an
+element of <span class="inlinecode"><a class="idref" href="framework.prop_fold.html#Z"><span class="id" title="variable">Z</span></a></span> (representing the accumulated knowledge about the lists
+so far), and produces a new <span class="inlinecode"><a class="idref" href="framework.prop_fold.html#Z"><span class="id" title="variable">Z</span></a></span> (representing the new accumulated
+knowledge about the lists so far). 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <a name="ForallFold2"><span class="id" title="inductive">ForallFold2</span></a> {<span class="id" title="var">X</span> <span class="id" title="var">Y</span> <span class="id" title="var">Z</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <a class="idref" href="framework.prop_fold.html#X"><span class="id" title="variable">X</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="framework.prop_fold.html#Y"><span class="id" title="variable">Y</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="framework.prop_fold.html#Z"><span class="id" title="variable">Z</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="framework.prop_fold.html#Z"><span class="id" title="variable">Z</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <span class="id" title="keyword">Prop</span>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#list"><span class="id" title="inductive">list</span></a> <span class="id" title="var">X</span> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#list"><span class="id" title="inductive">list</span></a> <span class="id" title="var">Y</span> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <span class="id" title="var">Z</span> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <span class="id" title="var">Z</span> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <span class="id" title="keyword">Prop</span> :=<br/>
+| <a name="ForallFold2_nil"><span class="id" title="constructor">ForallFold2_nil</span></a> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">∀</span> <span class="id" title="var">z</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="framework.prop_fold.html#ForallFold2"><span class="id" title="inductive">ForallFold2</span></a> <span class="id" title="var">R</span> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Lists.List.html#145bedf8a5d4a541831f3f70db03085c"><span class="id" title="notation">[]</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Lists.List.html#145bedf8a5d4a541831f3f70db03085c"><span class="id" title="notation">[]</span></a> <a class="idref" href="framework.prop_fold.html#z"><span class="id" title="variable">z</span></a> <a class="idref" href="framework.prop_fold.html#z"><span class="id" title="variable">z</span></a><br/>
+| <a name="ForallFold2_cons"><span class="id" title="constructor">ForallFold2_cons</span></a> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">∀</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">x</span> : <span class="id" title="var">X</span>) (<span class="id" title="var">y</span> : <span class="id" title="var">Y</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">z</span> <span class="id" title="var">z'</span> <span class="id" title="var">z''</span> : <span class="id" title="var">Z</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">xs</span> : <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#list"><span class="id" title="inductive">list</span></a> <span class="id" title="var">X</span>) (<span class="id" title="var">ys</span> : <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#list"><span class="id" title="inductive">list</span></a> <span class="id" title="var">Y</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">REL</span>: <span class="id" title="var">R</span> <a class="idref" href="framework.prop_fold.html#x"><span class="id" title="variable">x</span></a> <a class="idref" href="framework.prop_fold.html#y"><span class="id" title="variable">y</span></a> <a class="idref" href="framework.prop_fold.html#z"><span class="id" title="variable">z</span></a> <a class="idref" href="framework.prop_fold.html#z'"><span class="id" title="variable">z'</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">REST</span>: <a class="idref" href="framework.prop_fold.html#ForallFold2"><span class="id" title="inductive">ForallFold2</span></a> <span class="id" title="var">R</span> <a class="idref" href="framework.prop_fold.html#xs"><span class="id" title="variable">xs</span></a> <a class="idref" href="framework.prop_fold.html#ys"><span class="id" title="variable">ys</span></a> <a class="idref" href="framework.prop_fold.html#z'"><span class="id" title="variable">z'</span></a> <a class="idref" href="framework.prop_fold.html#z''"><span class="id" title="variable">z''</span></a>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="framework.prop_fold.html#ForallFold2"><span class="id" title="inductive">ForallFold2</span></a> <span class="id" title="var">R</span> (<a class="idref" href="framework.prop_fold.html#x"><span class="id" title="variable">x</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#0a8150c3c4df34d205c5ed9a427e2ed5"><span class="id" title="notation">::</span></a> <a class="idref" href="framework.prop_fold.html#xs"><span class="id" title="variable">xs</span></a>) (<a class="idref" href="framework.prop_fold.html#y"><span class="id" title="variable">y</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#0a8150c3c4df34d205c5ed9a427e2ed5"><span class="id" title="notation">::</span></a> <a class="idref" href="framework.prop_fold.html#ys"><span class="id" title="variable">ys</span></a>) <a class="idref" href="framework.prop_fold.html#z"><span class="id" title="variable">z</span></a> <a class="idref" href="framework.prop_fold.html#z''"><span class="id" title="variable">z''</span></a>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>
