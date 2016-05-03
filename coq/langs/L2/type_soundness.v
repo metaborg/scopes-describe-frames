@@ -15,14 +15,11 @@ Inductive vtyp' (h: H) : V -> T -> Prop :=
 | vtyp'_b : forall b, vtyp' h (BoolV b) Tbool
 | vtyp'_f :
     forall
-      ds s e f tas tr sp
+      ds e f tas tr sp
       (FS: scopeofFrame h f sp)
-      (TD: typofDecls ds tas)
-      (DS: declsofScopeP s ds)
-      (NOIMP: linksofScopeP s [(P, [sp])])
-      (WT: wt_exp (E s tr e))
-      (WB: wb_exp (E s tr e)),
-      vtyp' h (ClosV ds (E s tr e) f) (Tarrow tas tr)
+      (WT: wt_exp (E sp (Tarrow tas tr) (Fn ds e)))
+      (WB: wb_exp (E sp (Tarrow tas tr) (Fn ds e))),
+      vtyp' h (ClosV ds e f) (Tarrow tas tr)
 | vtyp'_df :
     forall
       ts t v
@@ -195,6 +192,7 @@ Hint Resolve in_2 : ins.
 
 (** An alternative, more selective hint database for this proof. *)
 Hint Constructors vtyp' : pres.
+Hint Constructors wb_exp wt_exp : pres.
 Hint Resolve eval_exp_scopeofFrame : pres.
 Hint Resolve fill_par_scopeofFrame : pres.
 Hint Resolve fill_seq_scopeofFrame : pres.
@@ -211,6 +209,17 @@ Hint Resolve scopeofFrameFrame : pres.
 
 Ltac peauto := eauto with pres ins.
 
+(** We prove type preservation for [L2] by mutual induction on the
+mutually inductive relations that make up [L2]'s specification. The
+induction hypotheses generated for each kind of relation is given by
+each of the conjunctive goals below.
+
+The mutual induction principle is based on Coq's built-in support for
+generating combined induction schemes. See the lines immediately
+before [Combined Scheme] in [semantics.v] for details on how we get
+Coq to generate the induction principle we use.
+
+The first conjunctive goal below is Theorem 3 in the paper: *)
 Lemma exp_preservation:
   (forall
       h0 f e v h1
@@ -356,7 +365,7 @@ Proof.
   - (* fn *)
     peauto.
   - (* app good case *)
-    edestruct H as [? VT']; peauto. inv VT'.
+    edestruct H as [? VT']; peauto. inv VT'. inv WT. inv WB. inv H4.
     eapply scopeofFrameDet in SF; eauto; subst.
     edestruct H0 as [? _]; peauto.
   - (* app dfun case *)
@@ -365,7 +374,7 @@ Proof.
     edestruct H as [? VT]; peauto.
     inv VT; simpl; peauto; contradiction.
   - (* app bad case 2 *)
-    edestruct H as [? VT1]; peauto. inv VT1.
+    edestruct H as [? VT1]; peauto. inv VT1. inv WT. inv WB. inv H3.
     eapply scopeofFrameDet in SF; eauto; subst.
     edestruct H0 as [? [X|X]]; peauto; inv X.
     peauto.
@@ -527,16 +536,13 @@ Proof.
   - (* eval_lhs var bad case *)
     inv WB; inv WT. split; auto.
     eapply scopeofRefDet in SR; eauto; subst.
-    eapply rlookupDet in SR0; eauto; subst. destruct SR0 as [? [? ?]]; subst.
     edestruct good_addr as [? [ADDR' _]]; peauto.
     intuition; eauto.
   - (* eval_lhs field good case *)
     inv WB; inv WT. destruct e; simpl in *; subst.
     edestruct H as [? VT]; peauto.
     eapply scopeofRefDet in SCR; eauto; subst.
-    (* eapply scopeofRefDet in SR0; eauto; subst. *)
     eapply linksofScopeDet in LS; eauto; inv LS.
-    eapply rlookupDet in SR0; eauto. destruct SR0 as [? [? ?]]; subst.
     inv VT. eapply scopeofFrameDet in SF; eauto; subst. eapply assocScopeDet in ASC; eauto; subst.
     assert (good_heap h2) by peauto.
     assert (scopeofFrame h2 scf s) by peauto.
@@ -555,7 +561,6 @@ Proof.
     edestruct H as [? VT]; peauto.
     eapply scopeofRefDet in SCR; eauto; subst.
     eapply linksofScopeDet in LS; eauto; inv LS.
-    eapply rlookupDet in SR0; eauto. destruct SR0 as [? [? ?]]; subst.
     inv VT. eapply scopeofFrameDet in SF; eauto; subst. eapply assocScopeDet in ASC; eauto; subst.
     assert (good_heap h2) by peauto.
     assert (scopeofFrame h2 scf s) by peauto.

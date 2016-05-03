@@ -124,7 +124,6 @@ Inductive wt_exp : exp -> Prop :=
 | wt_new :
     forall
       s t r p sd drec
-      (SCR: scopeofRefP r s)
       (RL: rlookup r p sd drec),
       t = Trecord drec ->
       wt_exp (E s t (New r))

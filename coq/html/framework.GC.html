@@ -270,7 +270,7 @@ Modeling complete reachability-based gc with respect to a root set.  Drop exactl
 </div>
 
 <div class="doc">
-Key lemma (paper Lemma 2): safe frame dropping preserves heap goodness. 
+Key lemma (paper Lemma 4): safe frame dropping preserves heap goodness. 
 </div>
 <div class="code">
 &nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a name="good_heap_safeRemoval"><span class="id" title="lemma">good_heap_safeRemoval</span></a> :<br/>
@@ -304,7 +304,7 @@ Key lemma (paper Lemma 2): safe frame dropping preserves heap goodness.
 <br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">destruct</span> (<span class="id" title="var">LNS</span> <span class="id" title="var">l</span> <span class="id" title="var">ss</span> <span class="id" title="var">H4</span>) <span class="id" title="keyword">as</span> [<span class="id" title="var">ks</span> [<span class="id" title="var">P1</span> [<span class="id" title="var">P2</span> <span class="id" title="var">P3</span>]]]. <span class="id" title="tactic">subst</span> <span class="id" title="var">ss</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">inv</span> <span class="id" title="var">P1</span>. <span class="id" title="var">inv</span> <span class="id" title="var">H5</span>. <span class="id" title="tactic">∃</span> <span class="id" title="var">ks</span>. <span class="id" title="tactic">split</span>. <span class="id" title="tactic">econstructor</span>. <span class="id" title="tactic">econstructor</span>. <span class="id" title="tactic">eapply</span> <a class="idref" href="framework.frames.html#removeFramesSame"><span class="id" title="lemma">removeFramesSame</span></a>; <span class="id" title="tactic">eauto</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">auto</span>. <span class="id" title="tactic">split</span>; <span class="id" title="tactic">auto</span>. <span class="id" title="tactic">intros</span>. <span class="id" title="tactic">destruct</span> (<span class="id" title="var">P3</span> <span class="id" title="var">s1</span> <span class="id" title="var">H5</span>) <span class="id" title="keyword">as</span> [<span class="id" title="var">f'</span> [<span class="id" title="var">Q1</span> <span class="id" title="var">Q2</span>]]. <span class="id" title="tactic">∃</span> <span class="id" title="var">f'</span>; <span class="id" title="tactic">split</span>; <span class="id" title="tactic">eauto</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">auto</span>. <span class="id" title="tactic">split</span>; <span class="id" title="tactic">auto</span>. <span class="id" title="tactic">intros</span>. <span class="id" title="tactic">destruct</span> (<span class="id" title="var">P3</span> <span class="id" title="var">s'</span> <span class="id" title="var">H5</span>) <span class="id" title="keyword">as</span> [<span class="id" title="var">f'</span> [<span class="id" title="var">Q1</span> <span class="id" title="var">Q2</span>]]. <span class="id" title="tactic">∃</span> <span class="id" title="var">f'</span>; <span class="id" title="tactic">split</span>; <span class="id" title="tactic">eauto</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">eapply</span> <a class="idref" href="framework.frames.html#removeFramesScope"><span class="id" title="lemma">removeFramesScope</span></a>; <span class="id" title="tactic">eauto</span>. <span class="id" title="tactic">split</span>; <span class="id" title="tactic">eauto</span>.<br/>
 
 <br/>
@@ -342,7 +342,7 @@ Key lemma (paper Lemma 2): safe frame dropping preserves heap goodness.
 </div>
 
 <div class="doc">
-Paper Lemma 3(a) 
+Paper Lemma 5(a) 
 </div>
 <div class="code">
 &nbsp;&nbsp;<span class="id" title="keyword">Corollary</span> <a name="good_heap_removeUnreferenced"><span class="id" title="lemma">good_heap_removeUnreferenced</span></a>:<br/>
@@ -370,7 +370,7 @@ Paper Lemma 3(a)
 </div>
 
 <div class="doc">
-Paper Lemma 3(b). 
+Paper Lemma 5(b). 
 </div>
 <div class="code">
 &nbsp;&nbsp;<span class="id" title="keyword">Corollary</span> <a name="good_heap_removeUnreachable"><span class="id" title="lemma">good_heap_removeUnreachable</span></a>:<br/>

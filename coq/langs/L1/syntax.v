@@ -5,12 +5,12 @@ Inductive T :=
 | Tarrow : T -> T -> T
 .
 
-(** [pre_exp] corresponds to unannotated terms (Fig. 8 of paper); 
+(** [pre_exp] corresponds to unannotated terms (Fig. 8 of paper);
     [exp] corresponds to annotated terms (Fig. 9 of paper). *)
 Inductive pre_exp :=
 | CNum: Z -> pre_exp
 | Plus : exp -> exp -> pre_exp
-| Fn : D -> exp -> pre_exp
+| Fn : D -> T -> exp -> pre_exp
 | App : exp -> exp -> pre_exp
 | Var : R -> pre_exp
 with exp :=

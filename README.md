@@ -44,12 +44,6 @@ The files of this Coq development are structured as follows:
 - `framework/` contains the generic, language-independent framework
   for scopes-as-frames:
 
-    - `maps.v`: a formalization of finite maps, using lists.
-
-    - `prop_fold.v`: a generic propositional fold predicate, used for
-      sequential n-ary let-bindings in L2 (see "Differences from the
-      paper" below).
-
     - `scopes.v`: the formalization of resolved scope graphs,
       parameterized by an object language notion of types.
 
@@ -64,6 +58,12 @@ The files of this Coq development are structured as follows:
     - `sub.v`: a straightforward adaptation of the key lemmas from
       `frames.v` and the `good_frame` and `good_heap` properties to
       support subtyping.
+
+    - `maps.v`: a formalization of finite maps, using lists.
+
+    - `prop_fold.v`: a generic propositional fold predicate, used for
+      sequential n-ary let-bindings in L2 (see "Differences from the
+      paper" below).
 
 - `langs/` contains folders for each language in the paper:
 
@@ -108,8 +108,8 @@ in the following ways:
 
     - The language provides three variants of n-ary let-binding:
       sequential lets, parallel lets, and recursive lets (following
-      the static semantics given for these in [1]). Recursive lets are
-      restricted to bind values of function type only.
+      the static semantics given for these in [1, 2]). Recursive lets
+      are restricted to bind values of function type only.
 
     - The language has boolean expressions and simple if-then-else
       branching.
@@ -121,3 +121,8 @@ References
 [1] Pierre Neron, Andrew P. Tolmach, Eelco Visser, Guido Wachsmuth: A
     Theory of Name Resolution. ESOP 2015: 205-231
     doi: http://dx.doi.org/10.1007/978-3-662-46669-8_9
+
+[2] Hendrik van Antwerpen, Pierre Néron, Andrew P. Tolmach, Eelco
+    Visser, Guido Wachsmuth. A Constraint Language for Static Semantic
+    Analysis based on Scope Graphs. PEPM 2016: 49–60 doi:
+    http://dx.doi.org/10.1145/2847538.2847543

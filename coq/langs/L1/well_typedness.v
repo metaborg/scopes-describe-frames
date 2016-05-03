@@ -33,7 +33,7 @@ Inductive wt_exp : exp -> Prop :=
       (TD: typofDecl d td)
       (WTE: wt_exp (E s1 t1 e1)),
       t = Tarrow td t1 ->
-      wt_exp (E s t (Fn d (E s1 t1 e1)))
+      wt_exp (E s t (Fn d td (E s1 t1 e1)))
 | wt_app:
     forall
       s t s1 t1 e1 s2 t2 e2

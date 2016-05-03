@@ -132,7 +132,7 @@ Extracting the target declaration from a path.
 </div>
 
 <div class="doc">
-<a name="lab2"></a><h1 class="section">Scope graphs.</h1>
+<a name="lab2"></a><h1 class="section">Scope graphs</h1>
 
 
 <div class="paragraph"> </div>
@@ -146,6 +146,56 @@ similar type inference convenience as Canonical Structures.
 The <span class="inlinecode"><a class="idref" href="framework.scopes.html#DData"><span class="id" title="variable">DData</span></a></span> type will be instantiated with pairs of optional
 associated scopes and types later. Having <span class="inlinecode"><a class="idref" href="framework.scopes.html#DData"><span class="id" title="variable">DData</span></a></span> as a type parameter
 is a generalization that we expect to exploit in future work. 
+<div class="paragraph"> </div>
+
+ The formalization of resolved scope graphs below is based on a
+representation of adjacency information for scopes in the graph.  The
+edges and vertices summarized by the grammar in Figure 5 in the paper
+is concisely represented in the following way. We let the <span class="inlinecode"><span class="id" title="keyword">Scope</span></span>
+field of the type class below record:
+
+<div class="paragraph"> </div>
+
+<ul class="doclist">
+<li> the list of references adjacent to a given scope;
+
+<div class="paragraph"> </div>
+
+
+</li>
+<li> the list of declarations adjacent to a given scope; and
+
+<div class="paragraph"> </div>
+
+
+</li>
+<li> the list of scopes (ordered by their edge label) that a given scope
+  has edges to.
+
+</li>
+</ul>
+In order to represent type associations and <i>associated scope edges</i>
+for declarations, and in order to represent the resolution paths for
+the <i>resolved</i> scope graph:
+
+<div class="paragraph"> </div>
+
+<ul class="doclist">
+<li> declarations are associated an open-ended set of <span class="inlinecode"><a class="idref" href="framework.scopes.html#DData"><span class="id" title="variable">DData</span></a></span>; for the
+  languages with which this paper is concerned, such data includes an
+  obligatory type, and an optional <i>associated scope</i> (we specialize
+  the type class below);
+
+<div class="paragraph"> </div>
+
+
+</li>
+<li> references are associated with a resolution path.
+
+</li>
+</ul>
+The set of all scopes a given graph contains is represented as a map
+from scope identifiers to <span class="inlinecode"><span class="id" title="keyword">Scope</span></span>s. 
 </div>
 <div class="code">
 
@@ -607,7 +657,7 @@ Gets the declarations of a scope (D(s) in Fig. 5 in the
 </div>
 
 <div class="doc">
-Gets the declarations of a scope (R(s) in Fig. 5 in the
+Gets the references of a scope (R(s) in Fig. 5 in the
   paper). 
 </div>
 <div class="code">
@@ -713,10 +763,6 @@ For retrieving data associated with declarations (such as
 &nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="var">inv</span> <span class="id" title="var">H0</span>. <span class="id" title="var">inv</span> <span class="id" title="var">H1</span>. <span class="id" title="tactic">rewrite</span> (<a class="idref" href="framework.scopes.html#pathofRefDet"><span class="id" title="lemma">pathofRefDet</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">PR</span> <span class="id" title="var">_</span> <span class="id" title="var">PR0</span>). <span class="id" title="tactic">reflexivity</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a name="declsofRefs"><span class="id" title="definition">declsofRefs</span></a> (<span class="id" title="var">rs</span>: <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#list"><span class="id" title="inductive">list</span></a> <a class="idref" href="framework.scopes.html#R"><span class="id" title="inductive">R</span></a>) (<span class="id" title="var">ds</span>: <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#list"><span class="id" title="inductive">list</span></a> <a class="idref" href="framework.scopes.html#D"><span class="id" title="inductive">D</span></a>) : <span class="id" title="keyword">Prop</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Lists.List.html#Forall2"><span class="id" title="inductive">Forall2</span></a> <a class="idref" href="framework.scopes.html#declofRef"><span class="id" title="inductive">declofRef</span></a> <a class="idref" href="framework.scopes.html#rs"><span class="id" title="variable">rs</span></a> <a class="idref" href="framework.scopes.html#ds"><span class="id" title="variable">ds</span></a>.<br/>
 
 <br/>
 &nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a name="assocDataofRef"><span class="id" title="definition">assocDataofRef</span></a> <span class="id" title="var">r</span> <span class="id" title="var">s</span> :=<br/>

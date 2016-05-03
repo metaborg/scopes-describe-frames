@@ -47,7 +47,8 @@ Section DynamicSemantics.
 
 Context `{G: Graph (@AT T)}.
 
-(** Evaluation only inspects pre-terms; it ignores scope and type annotations. *)
+(** Evaluation depends mainly on pre-terms and, occasionally, on scope
+    annotations; it ignores type annotations. *)
 Inductive eval_exp : H -> FrameId -> exp -> V -> H -> Prop :=
 | eval_cnum_ :
     forall frm z h s t,
@@ -90,8 +91,8 @@ Inductive eval_exp : H -> FrameId -> exp -> V -> H -> Prop :=
       eval_exp h0 frm (E s t (Var r)) (AbortV Wrong) h0
 | eval_fn_ :
     forall
-      frm h s t d e,
-      eval_exp h frm (E s t (Fn d e)) (ClosV d e frm) h
+      frm h s t t0 d e,
+      eval_exp h frm (E s t (Fn d t0 e)) (ClosV d e frm) h
 | eval_app :
     forall
       frm h0 h1 h2 h3 h4 e1 e2 v2 s t vb ff f e d sp
@@ -121,7 +122,7 @@ Inductive eval_exp : H -> FrameId -> exp -> V -> H -> Prop :=
 Inductive eval_prog : prog -> V -> Prop :=
 | eval_prog_ :
     forall
-      e v f h0 h1  
+      e v f h0 h1
       (TOPFRM: initFrame emptyHeap (expScope e) [] [] f h0)  (* The empty root frame *)
       (EVALB: eval_exp h0 f e v h1),
       eval_prog (Prog e) v

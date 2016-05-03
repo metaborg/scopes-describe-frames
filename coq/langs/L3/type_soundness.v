@@ -16,14 +16,11 @@ Inductive vtyp' (h: H) : V -> T -> Prop :=
 | vtyp'_b : forall b, vtyp' h (BoolV b) Tbool
 | vtyp'_f :
     forall
-      ds s e f tas tr sp
+      ds e f tas tr sp
       (FS: scopeofFrame h f sp)
-      (TD: typofDecls ds tas)
-      (DS: declsofScopeP s ds)
-      (NOIMP: linksofScopeP s [(P, [sp])])
-      (WT: wt_exp (E s tr e))
-      (WB: wb_exp (E s tr e)),
-      vtyp' h (ClosV ds (E s tr e) f) (Tarrow tas tr)
+      (WT: wt_exp (E sp (Tarrow tas tr) (Fn ds e)))
+      (WB: wb_exp (E sp (Tarrow tas tr) (Fn ds e))),
+      vtyp' h (ClosV ds e f) (Tarrow tas tr)
 | vtyp'_df :
     forall
       ts t v
@@ -38,30 +35,14 @@ Inductive vtyp' (h: H) : V -> T -> Prop :=
 
 (** Class constructors: *)
 | vtyp_cc : forall
-    s0 d rs es optr f s sp ds ts
-    (ASC: assocScope d s)
-    (DS: declsofScopeP s ds)
-    (TS: typofDecls ds ts)
+    s0 d rs es optr f sp lf
     (FS: scopeofFrame h f sp)
-    (OPTR: match optr with
-           | Some r =>
-             scopeofRefP r sp /\
-             exists p spar dpar,
-               rlookup r p sp dpar /\
-               assocScope dpar spar /\
-               typofDecl dpar (TclassDef dpar) /\
-               linksofScopeP s [(P, [sp]); (I, [spar])]
-           | None =>
-             linksofScopeP s [(P, [sp])]
-           end)
-    (SRS: forall r, In r rs -> scopeofRefP r s)
-    (WBE: forall e, In e es -> wb_exp e /\ expScope e = s)
-    (WTE: Forall2 (fun e r =>
-                     exists sr p s'' d' t',
-                       scopeofRefP r sr /\
-                       rlookup r p s'' d' /\
-                       typofDecl d' t' /\ sub' (expType e) t' /\ wt_exp e) es rs),
+    (ZIP: (rs, es) = unzipf lf)
+    (WB: wb_decls sp [(Cdef s0 d optr lf)])
+    (WT: wt_decls [(Cdef s0 d optr lf)]),
     vtyp' h (ConstructorV s0 d optr (rs, es) f) (TclassDef d)
+
+| vtyp_ncc : forall d, vtyp' h NullV (TclassDef d)
 
 (** Null values are typed by classes: *)
 | vtyp'_nr : forall d, vtyp' h NullV (Tclass d)
@@ -140,7 +121,6 @@ Hint Resolve setSlot_vtyp' : sgraph.
 Hint Resolve newFrame_vtyp' : sgraph.
 Hint Resolve fillFrame_vtyp' : sgraph.
 
-
 Instance VT0 : VTyp.
 Proof.
   econstructor.
@@ -158,6 +138,8 @@ Inductive default : T -> V -> Prop :=
     default t v ->
     default (Tarrow ts t) (DefFunV v)
 | def_r : forall d, default (Tclass d) NullV
+| def_c : forall d,
+    default (TclassDef d) NullV
 .
 
 Hint Constructors default : sgraph.
@@ -423,6 +405,7 @@ Hint Resolve in_2 : ins.
 
 (** An alternative, more selective hint database for this proof. *)
 Hint Constructors vtyp' : pres.
+Hint Constructors wb_exp wt_exp : pres.
 Hint Resolve eval_exp_scopeofFrame : pres.
 Hint Resolve fill_par_scopeofFrame : pres.
 Hint Resolve fill_seq_scopeofFrame : pres.
@@ -631,10 +614,11 @@ Proof.
     edestruct good_frame_getSlot_sub with (f := ff) (h:=h1) as [v P]; peauto.
     exfalso; eapply GET; eauto.
   - (* fn *)
-    pseauto.
+    split; peauto. eexists; pseauto.
   - (* app good case *)
     edestruct H as [? [? [VT SUB]]]; peauto. inv VT.
     eapply sub_tarrow in SUB; peauto. destruct SUB as [? [? [EQ [FA SUB]]]]; inv EQ.
+    inv WT; inv WB. inv H4.
     eapply scopeofFrameDet in SF; eauto; subst.
     edestruct H0 as [? _]; eauto using forall2_sub_trans with pres.
     edestruct H1 as [? [? [VT SUB']]]; pseauto.
@@ -649,7 +633,7 @@ Proof.
   - (* app bad case 2 *)
     edestruct H as [? [? [VT1 SUB]]]; peauto.
     eapply sub_tarrow in SUB; peauto. destruct SUB as [? [? [EQ [FA SUB]]]]; subst.
-    inv VT1.
+    inv VT1. inv WT; inv WB. inv H3.
     eapply scopeofFrameDet in SF; eauto; subst.
     edestruct H0 as [? [X|X]]; eauto using forall2_sub_trans with pres; inv X.
     peauto.
@@ -882,17 +866,24 @@ Proof.
     edestruct getAddr_typofDecl_getSlot_sub as [? [? [? [GET [VT [SUB TD']]]]]]; peauto.
     eapply getSlotDet in GS; eauto; subst.
     eapply typofDeclDet in TD; eauto; subst.
-    inv VT. destruct OPTR as [SR' [? [? [? [DR' [ASCR [TDR IMSR]]]]]]]; subst.
-    assert (sf = sp) by
+    inv VT. inv WB. inv WT.
+    destruct PARENT as [SR' [? [? [? [DR' [ASCR [TDR IMSR]]]]]]]; subst.
+    rewrite <- EQ in ZIP. inv ZIP.
+    rewrite <- EQ in EQ0. inv EQ0.
+    assert (sf = s1) by
         (eapply scopeofFrameDet; [eapply SF|eapply eval_objinit_scopeofFrame; eauto; eapply FS1]); subst.
     edestruct H0 as [GH2 VT2]; peauto.
     inv VT2.
     eapply assocScopeDet in ASCR; eauto; subst.
+    eapply assocScopeDet in SD; eauto; subst.
     eapply scopeofFrameDet in SFP; eauto; subst.
     inv SUB; [|inv SUB1].
     eapply assocScopeDet in AS2; eauto; subst.
-    edestruct H1 as [GH' [X|X]]; peauto; inv X.
+    edestruct H1 as [GH' [X|X]]; peauto; try inv X.
+    intros; edestruct SRS; eauto.
     intuition. econstructor; eauto. eapply assign_refs_scopeofFrame; peauto.
+  - (* eval_objinit null case *)
+    edestruct H as [GH' VT]; peauto.
   - (* eval_objinit bad case 1 *)
     edestruct H as [GH' VT]; peauto. destruct v; inv BAD; try inv VT.
     destruct e; peauto.
@@ -917,7 +908,8 @@ Proof.
     edestruct getAddr_typofDecl_getSlot_sub as [? [? [? [GET [VT [SUB TD']]]]]]; peauto.
     eapply getSlotDet in GS; eauto; subst.
     eapply typofDeclDet in TD; eauto; subst.
-    inv VT. destruct OPTR as [SR' [? [? [? [DR' [ASCR [TDR IMSR]]]]]]]; subst.
+    inv VT. inv WB.
+    destruct PARENT as [SR' [? [? [? [DR' [ASCR [TDR IMSR]]]]]]]; subst.
     edestruct H0 as [GH2 VT2]; peauto.
     destruct v; try inv VT2; peauto.
   - (* eval_objinit bad case 5 *)
@@ -928,8 +920,11 @@ Proof.
     edestruct getAddr_typofDecl_getSlot_sub as [? [? [? [GET [VT [SUB TD']]]]]]; peauto.
     eapply getSlotDet in GS; eauto; subst.
     eapply typofDeclDet in TD; eauto; subst.
-    inv VT. destruct OPTR as [SR' [? [? [? [DR' [ASCR [TDR IMSR]]]]]]]; subst.
-    assert (sf = sp) by
+    inv VT. inv WB. inv WT.
+    destruct PARENT as [SR' [? [? [? [DR' [ASCR [TDR IMSR]]]]]]]; subst.
+    rewrite <- EQ in ZIP. inv ZIP.
+    rewrite <- EQ in EQ0. inv EQ0.
+    assert (sf = s1) by
         (eapply scopeofFrameDet; [eapply SF|eapply eval_objinit_scopeofFrame; eauto; eapply FS1]); subst.
     edestruct H0 as [GH2 VT2]; peauto.
     inv VT2.
@@ -937,7 +932,9 @@ Proof.
     eapply scopeofFrameDet in SFP; eauto; subst.
     inv SUB; [|inv SUB1].
     eapply assocScopeDet in AS2; eauto; subst.
-    edestruct H1 as [GH' [X|X]]; peauto; subst; inv BAD.
+    eapply assocScopeDet in SD; eauto; subst.
+    edestruct H1 as [GH' [X|X]]; peauto; subst; try inv BAD.
+    intros; edestruct SRS; eauto.
     intuition. econstructor; eauto.
   - (* eval_objinit no parent good case *)
     edestruct H as [? [? [? [SF' [DS' [IN TD]]]]]]; peauto.
@@ -947,10 +944,14 @@ Proof.
     edestruct getAddr_typofDecl_getSlot_sub as [? [? [? [GET [VT [SUB TD']]]]]]; peauto.
     eapply getSlotDet in GS; eauto; subst.
     eapply typofDeclDet in TD; eauto; subst.
-    inv VT. inv SUB; [|inv SUB1].
-    assert (sf = sp) by (eapply scopeofFrameDet; eauto); subst.
+    inv VT. inv WB. inv WT. inv SUB; [|inv SUB1].
+    rewrite <- EQ in ZIP. inv ZIP.
+    rewrite <- EQ in EQ0. inv EQ0.
+    assert (sf = s1) by (eapply scopeofFrameDet; eauto); subst.
     eapply assocScopeDet in AS2; eauto; subst.
-    edestruct H0 as [GH2 [X|X]]; peauto; inv X.
+    eapply assocScopeDet in SD; eauto; subst.
+    edestruct H0 as [GH2 [X|X]]; peauto; try inv X.
+    intros; edestruct SRS; eauto.
     intuition. econstructor; eauto. eapply assign_refs_scopeofFrame; peauto.
   - (* eval_objinit no parent bad case 1 *)
     edestruct H as [? [? [? [SF' [DS' [IN TD]]]]]]; peauto.
@@ -967,10 +968,14 @@ Proof.
     edestruct getAddr_typofDecl_getSlot_sub as [? [? [? [GET [VT [SUB TD']]]]]]; peauto.
     eapply getSlotDet in GS; eauto; subst.
     eapply typofDeclDet in TD; eauto; subst.
-    inv VT. inv SUB; [|inv SUB1].
-    assert (sf = sp) by (eapply scopeofFrameDet; eauto); subst.
+    inv VT. inv WB. inv WT. inv SUB; [|inv SUB1].
+    rewrite <- EQ in ZIP. inv ZIP.
+    rewrite <- EQ in EQ0. inv EQ0.
+    assert (sf = s1) by (eapply scopeofFrameDet; eauto); subst.
     eapply assocScopeDet in AS2; eauto; subst.
-    edestruct H0 as [GH2 [X|X]]; peauto; subst; inv BAD.
+    eapply assocScopeDet in SD; eauto; subst.
+    edestruct H0 as [GH2 [X|X]]; peauto; subst; try inv BAD.
+    intros; edestruct SRS; eauto.
     simpl. intuition.
   - (* assign_refs nil case *)
     peauto.
@@ -1021,10 +1026,8 @@ Proof.
   inv WT; inv WB. rewrite <- EQ in EQ0. inv EQ0.
   assert (vtyp h0 (ConstructorV s rd optr (unzipf fds) frm) (TclassDef rd)).
   rewrite <- EQ. eapply assocScopeDet in SD; eauto; subst.
-  econstructor; sgauto.
-  destruct optr.
-  destruct PARENT0 as [? [? [? [? [? [? [? ?]]]]]]].
-  split; eauto 10. assumption.
+  econstructor; pseauto. econstructor; pseauto. econstructor.
+  econstructor; pseauto. econstructor; pseauto.
   eapply IHIDs; eauto using setSlotScope, setSlot_good_heap.
   eapply setSlot_good_heap_sub; sgauto. simpl. constructor.
 Qed.

@@ -151,10 +151,8 @@ Inductive wt_exp : exp -> Prop :=
       wt_exp (E s t (Seq (E s1 t1 e1) (E s2 t2 e2)))
 | wt_new :
     forall
-      s t r p sd drec srec
-      (SCR: scopeofRefP r s)
+      s t r p sd drec
       (RL: rlookup r p sd drec)
-      (ASC: assocScope drec srec)
       (TD: typofDecl drec (TclassDef drec)),
       t = Tclass drec ->
       wt_exp (E s (Tclass drec) (New r))

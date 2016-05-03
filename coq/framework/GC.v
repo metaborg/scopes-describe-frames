@@ -167,7 +167,7 @@ Section VTypRefersProperties.
 
   Context `{VTR: VTypRefers}.
 
-  (** Key lemma (paper Lemma 2): safe frame dropping preserves heap goodness. *)
+  (** Key lemma (paper Lemma 4): safe frame dropping preserves heap goodness. *)
   Lemma good_heap_safeRemoval :
     forall h1,
       good_heap h1 ->
@@ -194,7 +194,7 @@ Section VTypRefersProperties.
 
     intros. destruct (LNS l ss H4) as [ks [P1 [P2 P3]]]. subst ss.
     inv P1. inv H5. exists ks. split. econstructor. econstructor. eapply removeFramesSame; eauto.
-    auto. split; auto. intros.  destruct (P3 s1 H5) as [f' [Q1 Q2]]. exists f'; split; eauto.
+    auto. split; auto. intros.  destruct (P3 s' H5) as [f' [Q1 Q2]]. exists f'; split; eauto.
     eapply removeFramesScope; eauto. split; eauto.
 
     intro. apply H2 in H9. eapply H9.
@@ -223,7 +223,7 @@ Section VTypRefersProperties.
     eapply removeFramesSame in H8; eauto. destruct H8; eauto.
   Qed.
 
-  (** Paper Lemma 3(a) *)
+  (** Paper Lemma 5(a) *)
   Corollary good_heap_removeUnreferenced:
     forall (h1: H),
       good_heap h1 ->
@@ -244,7 +244,7 @@ Section VTypRefersProperties.
     eapply removeAllUnreferenced_safe; eauto.
   Qed.
 
-  (** Paper Lemma 3(b). *)
+  (** Paper Lemma 5(b). *)
   Corollary good_heap_removeUnreachable:
     forall (h1: H),
       good_heap h1 ->

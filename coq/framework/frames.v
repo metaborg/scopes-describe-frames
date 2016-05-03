@@ -709,8 +709,8 @@ Section FrameHeapProperties.
 
   (** ** Dynamic lookup by path. *)
 
-  (** [lookup h f p f'] says that [p] traces a dynamic path from frame
-  [f] to frame [f'] in heap [h]. (Corresponds to [[DLookupD]] and
+  (** [lookup h f p d f'] says that, in heap [h], [p] traces a dynamic path from frame
+  [f] to declaration [d] in frame [f']. (Corresponds to [[DLookupD]] and
   [[DLookupE]] in Fig. 12 in the paper.) *)
 
   Inductive lookup (h: H) : FrameId -> path -> D -> FrameId -> Prop :=
@@ -902,14 +902,102 @@ Section Goodness.
             exists ks,
               llinksofFrame h f l ks /\
               keys ks = ss /\
-              forall s,
-                In s ss ->
-                exists f', get ScopeIdDec ks s = Some f' /\
-                           scopeofFrame h f' s)
+              forall s',
+                In s' ss ->
+                exists f', get ScopeIdDec ks s' = Some f' /\
+                           scopeofFrame h f' s')
         (LNF: forall l ks,
             llinksofFrame h f l ks ->
             llinksofScopeP s l (keys ks)),
         well_bound h f.
+
+  (** The formalization of well-boundness above differs slightly from
+  Figure 15 in the paper. The differences are mainly due to
+  differences in representation. In particular:
+
+  - K(s)(l) as defined in the paper (Figure 5) returns an empty set if
+    s has no l-labeled edges; in contrast, [llinksofScope s l ks]
+    fails if [s] has no [l]-labeled edges; and
+
+  - The paper uses sets to represent links and labeled edges, whereas
+    this artifact uses lists.
+
+  [well_bound] is formulated to take these representational
+  differences into account.
+
+  Below, we prove that the formulation of [well_bound] guarantees
+  that: (a) the slots of a frame are in one-to-one correspondence with
+  the declarations in the frame’s scope; (b) the links of a frame are
+  in one-to-one correspondence with the labeled edges of the frame’s
+  scope, and the scope of each link target matches the corresponding
+  edge target. (Figure 4 in the paper illustrates the resulting
+  commuting diagram.) *)
+
+  Lemma wb_representation_sound :
+    forall h f,
+      well_bound h f ->
+      exists s, scopeofFrame h f s /\
+           (exists ds slots, ddataofScopeP s ds /\
+                        slotsofFrame h f slots /\ DomEq ds slots) /\
+           (forall l s', ((exists ks, llinksofScopeP s l ks /\ In s' ks) <->
+                     (exists ks', llinksofFrame h f l ks' /\
+                             exists f', get ScopeIdDec ks' s' = Some f' /\
+                                   scopeofFrame h f' s'))) /\
+           (forall l ks, llinksofScopeP s l ks <-> (exists ks', llinksofFrame h f l ks' /\ keys ks' = ks)).
+  Proof.
+    destruct 1. eexists; split; eauto.
+    split.
+    - inversion SC. edestruct DSF. econstructor; eauto. destruct H1.
+      do 2 eexists; split; sgauto. split; sgauto. unfold DomEq in H2.
+      split; intros; eauto. apply H2; auto. apply H2; auto.
+    - intros. split; intros. split; intros.
+      + destruct H0 as [? [? ?]]. edestruct LNS as [? [? [? ?]]]; eauto.
+      + destruct H0 as [? [? [? [? ?]]]]. edestruct LNF as [? [? ?]]; eauto.
+        eexists; split; eauto. eapply keys_in; eauto.
+      + split; intros. eapply LNS in H0.
+        destruct H0 as [? [? [? ?]]]. subst. eauto.
+        destruct H0 as [? [? ?]]. subst. eauto.
+  Qed.
+
+  Lemma wb_representation_complete :
+    forall h f s,
+    scopeofFrame h f s /\
+    ((exists ds slots, ddataofScopeP s ds /\
+                  slotsofFrame h f slots /\ DomEq ds slots) /\
+     (forall l s', ((exists ks, llinksofScopeP s l ks /\ In s' ks) <->
+               (exists ks', llinksofFrame h f l ks' /\
+                       exists f', get ScopeIdDec ks' s' = Some f' /\
+                             scopeofFrame h f' s')))) ->
+    (forall l ks, llinksofScopeP s l ks <-> (exists ks', llinksofFrame h f l ks' /\ keys ks' = ks)) ->
+    well_bound h f.
+  Proof.
+    destruct 1 as [? [[? [? [? [? ?]]]] ?]].
+    econstructor; sgauto; intros.
+    - eapply ddataofScopeDet in H1; eauto; subst.
+      eexists; split; sgauto. intros; split; intro; eapply H3; eauto.
+    - eapply slotsofFrameDet in H2; eauto; subst.
+      eexists; split; sgauto. intros; split; intro; eapply H3; eauto.
+    - assert ((exists s', In s' ss) \/ ss = nil).
+      { destruct ss; eauto. left; eexists; econstructor; eauto. }
+      destruct H7 as [[? ?]|].
+      + assert (IFF:=H4). specialize (H4 l x1).
+        destruct H4. edestruct H4; sgauto.
+        destruct H9 as [? [? [? ?]]].
+        eexists; split; eauto. split.
+        edestruct H5. edestruct H12 as [? [? ?]]; eauto.
+        eapply llinksofFrameDet in H9; eauto; subst. auto.
+        intros.
+        specialize (IFF l s'). destruct IFF.
+        edestruct H13 as [? [? ?]]; eauto.
+        eapply llinksofFrameDet in H9; eauto; subst. eauto.
+      + subst. edestruct H4.
+        specialize (H5 l []). simpl in H5. destruct H5. eapply H5 in H6.
+        edestruct H5 as [? [? ?]]; eauto. destruct x1; inv H11.
+        eexists; split; eauto. simpl. split. split; auto.
+        inversion 1.
+    - apply H5. eauto.
+      Grab Existential Variables. assumption. assumption.
+  Qed.
 
   Inductive well_typed (h: H) (f: FrameId) : Prop :=
   | well_typed_ :
@@ -1007,9 +1095,8 @@ Section Goodness.
 
   Lemma setSlot_well_typed :
     forall
-      h0 f d v h1 t s
+      h0 f d v h1 t
       (SET: setSlot h0 f d v h1)
-      (SF: scopeofFrame h0 f s)
       (TD: typofDecl d t)
       (VT': vtyp h0 v t)
       (WT: well_typed h0 f),
@@ -1020,7 +1107,7 @@ Section Goodness.
     econstructor; eauto.
     - econstructor; eauto. rewrite get_set_same; eauto.
     - intros. inv H4. rewrite get_set_same in H5. inv H5.
-      eapply setSlot_vtyp; eauto. simpl in H6. eapply scopeofFrameDet in SF; eauto; subst.
+      eapply setSlot_vtyp; eauto. simpl in H6.
       destruct (Ddec d0 d); subst. inv H6. simpl in H3. eapply typofDeclDet in TD; eauto; subst; eauto.
       eapply WT0 in H1; eauto. econstructor; eauto. assert (d <> d0). intuition.
       apply get_remove_other with (Kdec:=Ddec) (m:=slots) in H4.
@@ -1033,9 +1120,8 @@ Section Goodness.
 
   Lemma setSlot_good_frame :
     forall
-      h0 f d v h1 s t
+      h0 f d v h1 t
       (SET: setSlot h0 f d v h1)
-      (SF: scopeofFrame h0 f s)
       (TD: typofDecl d t)
       (VT': vtyp h0 v t)
       (WT: good_frame h0 f),
@@ -1075,9 +1161,8 @@ Section Goodness.
 
   Lemma setSlot_other_well_typed :
     forall
-      h0 f d v h1 t s f0
+      h0 f d v h1 t f0
       (SET: setSlot h0 f d v h1)
-      (SF: scopeofFrame h0 f s)
       (TD: typofDecl d t)
       (VT': vtyp h0 v t)
       (WT: well_typed h0 f0)
@@ -1096,9 +1181,8 @@ Section Goodness.
 
   Lemma setSlot_other_good_frame :
     forall
-      h0 f d v h1 t s f0
+      h0 f d v h1 t f0
       (SET: setSlot h0 f d v h1)
-      (SF: scopeofFrame h0 f s)
       (TD: typofDecl d t)
       (VT': vtyp h0 v t)
       (WT: good_frame h0 f0)
@@ -1108,32 +1192,6 @@ Section Goodness.
     intros; inv WT; sgauto.
   Qed.
 
-  Lemma getAddr_scopeofFrame :
-    forall
-      h f r ff d
-      (GH: good_heap h)
-      (FH: frame h f)
-      (ADDR: getAddr h f r (Addr_ ff d)),
-    exists sf, scopeofFrame h ff sf.
-  Proof.
-    inversion 3; subst. clear PATH ADDR.
-    induction LK; eauto.
-    - unfold frame in FH. eapply in_keys in FH. destruct FH. destruct x. destruct p.
-      eexists; try econstructor; eauto.
-    - generalize (GH _ FH); intro GF. inv GF. inv H0.
-      specialize (LNF _ _ IMS).
-      specialize (LNS _ _ LNF).
-      destruct LNS as [? [LLF [KS WBL]]].
-      eapply llinksofFrameDet in IMS; eauto; subst.
-      assert (S':=S).
-      apply keys_in in S. specialize (WBL _ S).
-      destruct WBL as [? [SCF' SFF']].
-      apply scopeofFrameFrame in SFF'.
-      rewrite SCF' in S'; inv S'.
-      eapply IHLK; eauto.
-  Qed.
-
-  Hint Resolve getAddr_scopeofFrame : sgraph.
 
   Lemma initFrame_other_well_bound :
     forall
@@ -1369,10 +1427,11 @@ Section Goodness.
   (** These are the public lemmas that provide structure to type
 soundness proofs. *)
 
-  (** In a good heap, for each path that is statically consistent, looking
-      up the path dynamically leads to a corresponding frame and declaration.
-      (This is Lemma 1 of the paper.) *)
-  Lemma good_path :
+  (** In a good heap, for each path that is statically consistent,
+      looking up the path dynamically leads to a corresponding frame
+      and declaration.  (Lemma 1 in the paper is a corollary of this,
+      as we prove below.)  *)
+  Lemma good_path0 :
     forall
       h
       (GH: good_heap h)
@@ -1398,11 +1457,26 @@ soundness proofs. *)
       eexists; split; sgauto.
   Qed.
 
+  (** Lemma 1 in the paper: *)
+  Lemma good_path :
+    forall
+      h
+      (GH: good_heap h)
+      r p f s d s'
+      (SF: scopeofFrame h f s)
+      (SR: scopeofRefP r s)
+      (SLK: rlookup r p s' d),
+    exists f', lookup h f p d f' /\ scopeofFrame h f' s'.
+  Proof.
+    destruct 4 as [? [SR' [PR SL]]].
+    eapply scopeofRefDet in SR; eauto; subst.
+    eapply good_path0 in SL; eauto.
+  Qed.
+
   (** In practice, we use this corollary of [good_path]:
       In a good heap, each static lookup starting from a reference
       scope corresponds to a dynamic lookup to the address of
       a corresponding scope and declaration. *)
-
   Corollary good_addr :
     forall
       h r p f s d s'
@@ -1419,7 +1493,7 @@ soundness proofs. *)
     intros. destruct SLK as [? [? [? ?]]].
     eapply scopeofRefDet in SR; eauto; subst.
     assert (H2':=H2).
-    eapply good_path in H2; eauto.
+    eapply good_path0 in H2; eauto.
     destruct H2. destruct H2.
     eexists; split; sgauto. econstructor; sgauto.
     inv H0.
@@ -1459,9 +1533,8 @@ soundness proofs. *)
       maintains heap goodness. *)
   Lemma setSlot_good_heap :
     forall
-      h0 f d v h1 s t
+      h0 f d v h1 t
       (SET: setSlot h0 f d v h1)
-      (SF: scopeofFrame h0 f s)
       (TD: typofDecl d t)
       (VT': vtyp h0 v t)
       (WT: good_heap h0),
@@ -1584,7 +1657,6 @@ soundness proofs. *)
 End Goodness.
 
 Hint Resolve setSlot_good_heap : sgraph.
-Hint Resolve getAddr_scopeofFrame : sgraph.
 Hint Resolve good_addr : sgraph.
 Hint Resolve initFrame_good_frame : sgraph.
 Hint Resolve initFrame_good_heap : sgraph.
@@ -1610,20 +1682,20 @@ Section DefaultVTypProperties.
 
   (** ** Defaults for Slots *)
 
-  Inductive defaults (s: ScopeId) : map D V -> Prop :=
-  | defaults_nil : defaults s []
+  Inductive defaults : map D V -> Prop :=
+  | defaults_nil : defaults []
   | default_cons :
       forall
         d slots t v
         (TD: typofDecl d t)
         (DF: default t v)
-        (TAIL: defaults s slots),
-        defaults s ((d,v) :: slots).
+        (TAIL: defaults slots),
+        defaults ((d,v) :: slots).
 
   Lemma defaults_vtyp :
     forall
-      s slots
-      (DF: defaults s slots)
+      slots
+      (DF: defaults slots)
       ts
       (TDs: typofDecls (keys slots) ts)
       h,
@@ -1640,8 +1712,8 @@ Section DefaultVTypProperties.
 
   Lemma defaults_vtyp' :
     forall
-      s slots
-      (DF: defaults s slots),
+      slots
+      (DF: defaults slots),
     forall d t v,
       In d (keys slots) ->
       typofDecl d t ->
@@ -1671,7 +1743,7 @@ Section DefaultVTypProperties.
   | initDefault_ : forall
       slots
       (DS: declsofScopeP s (keys slots))
-      (DF: defaults s slots)
+      (DF: defaults slots)
       (NF: initFrame h0 s ks slots f h1),
       initDefault h0 s ks f h1.
 

@@ -74,9 +74,8 @@ Hint Resolve good_heap2good_sub_heap : sgraph.
 
 Lemma setSlot_well_typed_sub :
   forall
-    T `{ST: SubTyping T} `{VT: VTyp T} h0 f d v h1 t s
+    T `{ST: SubTyping T} `{VT: VTyp T} h0 f d v h1 t
     (SET: setSlot h0 f d v h1)
-    (SF: scopeofFrame h0 f s)
     (TD: typofDecl d t)
     (WT: well_sub_typed h0 f)
     t'
@@ -91,7 +90,6 @@ Proof.
   - intros. inv H3. rewrite get_set_same in H4. inv H4.
     destruct (Ddec d0 d); subst.
     + rewrite get_set_same in H5; inv H5.
-      eapply scopeofFrameDet in SF; eauto; subst.
       eapply typofDeclDet in TD; eauto; subst.
       eexists; split; eauto using setSlot_vtyp.
     + rewrite get_set_other in H5; eauto.
@@ -104,9 +102,8 @@ Hint Resolve setSlot_well_typed_sub : sgraph.
 
 Lemma setSlot_other_well_sub_typed :
   forall
-    T `{ST: SubTyping T} `{VT: VTyp T} h0 f d v h1 t s f0
+    T `{ST: SubTyping T} `{VT: VTyp T} h0 f d v h1 t f0
     (SET: setSlot h0 f d v h1)
-    (SF: scopeofFrame h0 f s)
     (TD: typofDecl d t)
     (WT: well_sub_typed h0 f0)
     (DIFF: f <> f0)
@@ -128,9 +125,8 @@ Hint Resolve setSlot_other_well_sub_typed : sgraph.
 
 Lemma setSlot_other_good_sub_frame :
   forall
-    T `{ST: SubTyping T} `{VT: VTyp T} h0 f d v h1 t s f0
+    T `{ST: SubTyping T} `{VT: VTyp T} h0 f d v h1 t f0
     (SET: setSlot h0 f d v h1)
-    (SF: scopeofFrame h0 f s)
     (TD: typofDecl d t)
     (WT: good_sub_frame h0 f0)
     (DIFF: f <> f0)
@@ -145,9 +141,8 @@ Qed.
 
 Lemma setSlot_good_sub_frame :
   forall
-    T `{ST: SubTyping T} `{VT: VTyp T} h0 f d v h1 s t
+    T `{ST: SubTyping T} `{VT: VTyp T} h0 f d v h1 t
     (SET: setSlot h0 f d v h1)
-    (SF: scopeofFrame h0 f s)
     (TD: typofDecl d t)
     (WT: good_sub_frame h0 f)
     t'
@@ -163,9 +158,8 @@ Hint Resolve setSlot_good_sub_frame : sgraph.
 
 Lemma setSlot_good_heap_sub :
   forall
-    T `{ST: SubTyping T} `{VT: VTyp T} h0 f d v h1 s t
+    T `{ST: SubTyping T} `{VT: VTyp T} h0 f d v h1 t
     (SET: setSlot h0 f d v h1)
-    (SF: scopeofFrame h0 f s)
     (TD: typofDecl d t)
     (WT: good_sub_heap h0)
     t'
@@ -545,7 +539,7 @@ Corollary good_frame_getSlot_sub :
   forall
     T `{ST: SubTyping T} `{VT: VTyp T} h f s d ds
     (GF: good_sub_frame h f)
-    (SF: scopeofFrame h f s)
+    (SF: scopeofFrame h f s) 
     (DS: declsofScopeP s ds)
     (IN: In d ds),
   exists v, getSlot h f d v.

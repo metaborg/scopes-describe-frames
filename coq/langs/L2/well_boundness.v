@@ -129,17 +129,15 @@ Inductive wb_exp : exp -> Prop :=
 with wb_lhs : ScopeId -> lhs -> Prop :=
 | wb_lhs_var :
     forall
-      s r  p sd d'
-      (SR: scopeofRefP r s)
-      (SR: rlookup r p sd d'),
+      s r
+      (SR: scopeofRefP r s),
       wb_lhs s (Var r)
 | wb_lhs_field :
     forall
-      s e r srec p sd d' s'
+      s e r srec s'
       (WB: wb_exp e)
       (ES: expScope e = s)
       (SR: scopeofRefP r s')
-      (SR: rlookup r p sd d')
       (LS: linksofScopeP s' [(I,[srec])])
       (DSs: declsofScopeP s' []),
       wb_lhs s (Field e r)
@@ -150,7 +148,6 @@ Inductive wb_dec : ScopeId -> decl -> Prop :=
     forall
       d lf s s'
       (DS: scopeofDeclP d s)
-      (* (PS: linksofScopeP wc s' [(P,[s])]) *)
       (SD: assocScope d s')
       (WS: forall fd,
           In fd lf ->

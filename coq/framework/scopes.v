@@ -61,7 +61,7 @@ Fixpoint declofPath (p:path) : D :=
   | Ep _ _ p => declofPath p
   end.
 
-(** * Scope graphs.
+(** * Scope graphs
 
 We use a type class to package [Scope] and [graph] so that Coq can
 automatically infer the [DData] type from the context; this provides
@@ -70,6 +70,33 @@ similar type inference convenience as Canonical Structures.
 The [DData] type will be instantiated with pairs of optional
 associated scopes and types later. Having [DData] as a type parameter
 is a generalization that we expect to exploit in future work. *)
+
+(** The formalization of resolved scope graphs below is based on a
+representation of adjacency information for scopes in the graph.  The
+edges and vertices summarized by the grammar in Figure 5 in the paper
+is concisely represented in the following way. We let the [Scope]
+field of the type class below record:
+
+- the list of references adjacent to a given scope;
+
+- the list of declarations adjacent to a given scope; and
+
+- the list of scopes (ordered by their edge label) that a given scope
+  has edges to.
+
+In order to represent type associations and _associated scope edges_
+for declarations, and in order to represent the resolution paths for
+the _resolved_ scope graph:
+
+- declarations are associated an open-ended set of [DData]; for the
+  languages with which this paper is concerned, such data includes an
+  obligatory type, and an optional _associated scope_ (we specialize
+  the type class below);
+
+- references are associated with a resolution path.
+
+The set of all scopes a given graph contains is represented as a map
+from scope identifiers to [Scope]s. *)
 
 Class Graph {DData: Type} :=
   {
@@ -397,7 +424,7 @@ Section PredicateForms.
     eapply ddataofScope_scopeofDecl; eauto.
   Qed.
 
-  (** Gets the declarations of a scope (R(s) in Fig. 5 in the
+  (** Gets the references of a scope (R(s) in Fig. 5 in the
   paper). *)
   Definition refsofScopeP (s: ScopeId) (rs: list R) : Prop :=
     exists m, pathsofScope s = Some m /\ rs = keys m.
@@ -490,9 +517,6 @@ Section PredicateForms.
   Proof.
     intros. inv H0. inv H1. rewrite (pathofRefDet _ _ PR _ PR0). reflexivity.
   Qed.
-
-  Definition declsofRefs (rs: list R) (ds: list D) : Prop :=
-    Forall2 declofRef rs ds.
 
   Definition assocDataofRef r s :=
     exists d, declofRef r d /\ assocData d s.

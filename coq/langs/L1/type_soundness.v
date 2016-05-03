@@ -11,14 +11,11 @@ Context `{G: Graph (@AT T)}.
 Inductive vtyp' (h:H) : V -> T -> Prop :=
 | vtyp'_n : forall z, vtyp' h (NumV z) Tint
 | vtyp'_c : forall
-    d s e f t1 t2 sp
+    d e f t1 t2 sp
     (FS: scopeofFrame h f sp)
-    (TD: typofDecl d t1)
-    (DS: declsofScopeP s [d])
-    (NOIMP: linksofScopeP s [(P, [sp])])
-    (WT: wt_exp (E s t2 e))
-    (WB: wb_exp (E s t2 e)),
-    vtyp' h (ClosV d (E s t2 e) f) (Tarrow t1 t2)
+    (WT: wt_exp (E sp (Tarrow t1 t2) (Fn d t1 e)))
+    (WB: wb_exp (E sp (Tarrow t1 t2) (Fn d t1 e))),
+    vtyp' h (ClosV d e f) (Tarrow t1 t2)
 .
 
 Hint Constructors vtyp' : sgraph.
@@ -94,6 +91,7 @@ Qed.
 
 (** A selective hint database for the proof. *)
 Hint Constructors vtyp' : pres.
+Hint Constructors wb_exp wt_exp : pres.
 Hint Resolve eval_exp_scopeofFrame : pres.
 Hint Resolve initFrameSame_scopeofFrame : pres.
 Hint Resolve initFrame_good_heap1 : pres.
@@ -104,6 +102,8 @@ Hint Resolve setSlotScope : pres.
 
 Ltac peauto := eauto with pres.
 
+(** We prove that expressions are type sound. This is Theorem 2 in
+the paper: *)
 Lemma exp_preservation:
   (forall h0 f e v h1
           (EVAL: eval_exp h0 f e v h1)
@@ -147,7 +147,7 @@ Proof.
     exfalso. eapply NGET; eauto.
   - (* app good case *)
     edestruct IHEVAL1; eauto.
-    edestruct IHEVAL2; peauto. destruct e. inv H0.
+    edestruct IHEVAL2; peauto. inv H0. inv WT. inv WB. inv H3.
     edestruct IHEVAL3; peauto.
     assert (SF':scopeofFrame h2 ff sp0) by peauto.
     eapply scopeofFrameDet in SF; eauto; subst.

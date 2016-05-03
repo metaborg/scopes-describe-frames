@@ -16,14 +16,11 @@ Inductive vtyp' (h: H) : V -> T -> Prop :=
 | vtyp'_b : forall b, vtyp' h (BoolV b) Tbool
 | vtyp'_f :
     forall
-      ds s e f tas tr sp
+      ds e f tas tr sp
       (FS: scopeofFrame h f sp)
-      (TD: typofDecls ds tas)
-      (DS: declsofScopeP s ds)
-      (NOIMP: linksofScopeP s [(P, [sp])])
-      (WT: wt_exp (E s tr e))
-      (WB: wb_exp (E s tr e)),
-      vtyp' h (ClosV ds (E s tr e) f) (Tarrow tas tr)
+      (WT: wt_exp (E sp (Tarrow tas tr) (Fn ds e)))
+      (WB: wb_exp (E sp (Tarrow tas tr) (Fn ds e))),
+      vtyp' h (ClosV ds e f) (Tarrow tas tr)
 | vtyp'_df :
     forall
       ts t v
@@ -35,9 +32,12 @@ Inductive vtyp' (h: H) : V -> T -> Prop :=
       (SF: scopeofFrame h f s)
       (ASC: assocScope d s),
       vtyp' h (RecordV f) (Trecord d)
+
+(** [NullV] values are typed by records: *)
 | vtyp'_nr : forall d, vtyp' h NullV (Trecord d)
-(* Applying or reading a null value throws a NullPointer exception,
-which is allowed in any context: *)
+
+(** Trying to access a null value as a record raises a [NullPointer]
+exception, which is allowed in any context: *)
 | vtyp'_q : forall t, vtyp' h (AbortV NullPointer) t
 .
 
@@ -320,6 +320,7 @@ Qed.
 
 (* An alternative, more selective hint database for this proof. *)
 Hint Constructors vtyp' : pres.
+Hint Constructors wb_exp wt_exp : pres.
 Hint Resolve eval_exp_scopeofFrame : pres.
 Hint Resolve fill_par_scopeofFrame : pres.
 Hint Resolve fill_seq_scopeofFrame : pres.
@@ -504,9 +505,9 @@ Proof.
     edestruct good_frame_getSlot with (f := ff) (h:=h1) as [v P]; peauto.
     exfalso; eapply GET; eauto.
   - (* fn *)
-    peauto.
+    split; peauto.
   - (* app good case *)
-    edestruct H as [? [? VT']]; peauto. inv VT'.
+    edestruct H as [? [? VT']]; peauto. inv VT'. inv WT. inv WB. inv H5.
     eapply scopeofFrameDet in SF; eauto; subst.
     edestruct H0 as [? [? _]]; peauto.
     edestruct H1 as [? [? ?]]; peauto.
@@ -516,7 +517,7 @@ Proof.
     edestruct H as [? [? VT']]; peauto.
     inv VT'; simpl; peauto; contradiction.
   - (* app bad case 2 *)
-    edestruct H as [? [? VT']]; peauto. inv VT'.
+    edestruct H as [? [? VT']]; peauto. inv VT'. inv WT. inv WB. inv H4.
     eapply scopeofFrameDet in SF; eauto; subst.
     edestruct H0 as [? [? [X|X]]]; peauto; inv X.
     peauto.
@@ -599,15 +600,13 @@ Proof.
   - (* eval_lhs var bad case *)
     inv WB; inv WT.
     eapply scopeofRefDet in SR; eauto; subst.
-    eapply rlookupDet in SR0; eauto; subst. destruct SR0 as [? [? ?]]; subst.
     edestruct good_addr as [? [? ?]]; peauto; peauto.
-    destruct SR1. intuition eauto.
+    intuition eauto.
   - (* eval_lhs field good case *)
     inv WB; inv WT. destruct e; simpl in *; subst.
     edestruct H as [? [? VT']]; peauto.
     eapply scopeofRefDet in SCR; eauto; subst.
     eapply linksofScopeDet in LS; eauto; inv LS.
-    eapply rlookupDet in SR0; eauto. destruct SR0 as [? [? ?]]; subst.
     inv VT'.
     eapply scopeofFrameDet in SF; eauto; subst.
     eapply assocScopeDet in ASC; eauto; subst.
@@ -627,7 +626,6 @@ Proof.
     edestruct H as [? [? VT']]; peauto.
     eapply scopeofRefDet in SCR; eauto; subst.
     eapply linksofScopeDet in LS; eauto; inv LS.
-    eapply rlookupDet in SR0; eauto. destruct SR0 as [? [? ?]]; subst.
     inv VT'.
     eapply scopeofFrameDet in SF; eauto; subst.
     eapply assocScopeDet in ASC; eauto; subst.

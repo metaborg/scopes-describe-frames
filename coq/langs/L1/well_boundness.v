@@ -20,16 +20,15 @@ Inductive wb_exp : exp -> Prop :=
     wb_exp (E s t (Plus (E s1 t1 e1) (E s2 t2 e2)))
 | wb_var :
     forall
-      s t r p s' d'
-      (SR: rlookup r p s' d'),
+      s t r,
       wb_exp (E s t (Var r))
 | wb_fn :
     forall
-      s t d s1 t1 e1
+      s t d s1 t0 t1 e1
       (WB1: wb_exp (E s1 t1 e1))
       (PS: linksofScopeP s1 [(P, [s])])
       (DS: declsofScopeP s1 [d]),
-      wb_exp (E s t (Fn d (E s1 t1 e1)))
+      wb_exp (E s t (Fn d t0 (E s1 t1 e1)))
 | wb_app :
     forall
       s t s1 t1 e1 s2 t2 e2

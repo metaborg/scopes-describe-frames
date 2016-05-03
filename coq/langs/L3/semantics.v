@@ -505,7 +505,7 @@ a type class instance which defines it *)
   (* other bad case is in tail position *)
 
   with eval_objinit : H -> FrameId -> R -> AuxV -> H -> Prop :=
-  | eval_objinit_:
+  | eval_objinit_ :
       forall
         s1 h0 frm rf r ff d h1 rs es h2 rpar f rfpar s0 h3 h4 sf sfpar
         (LHS: eval_lhs h0 frm (Var r) (AddrAV (Addr_ ff d)) h1)
@@ -523,6 +523,12 @@ a type class instance which defines it *)
         (** Execute initializers in the lexical frame *)
         (ASGN: assign_refs h3 rf rf rs es UnitAV h4),
         eval_objinit h0 frm r (FrameAV rf) h4
+  | eval_objinit_null :
+      forall
+        h0 frm r ff d h1
+        (LHS: eval_lhs h0 frm (Var r) (AddrAV (Addr_ ff d)) h1)
+        (GS: getSlot h1 ff d NullV),
+        eval_objinit h0 frm r (AbortAV NullPointer) h1
   | eval_objinit_b1:
       forall
         h0 frm r h1 v
@@ -545,6 +551,7 @@ a type class instance which defines it *)
         (GS: getSlot h1 ff d v)
         (BAD: match v with
               | ConstructorV _ _ _ _ _ => False
+              | NullV => False
               | _ => True
               end),
         eval_objinit h0 frm r (aborta v) h1

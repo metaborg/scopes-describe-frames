@@ -487,7 +487,8 @@ coincide. *)
 (* other bad case is in tail position *)
 .
 
-(* Combined induction scheme *)
+(** Combined induction scheme, used for mutual induction. See also:
+https://coq.inria.fr/cocorico/Mutual%20Induction *)
 Scheme eval_exp_ind2 := Minimality for eval_exp Sort Prop
 with fill_par_ind2 := Minimality for fill_slots_par Sort Prop
 with fill_seq_ind2 := Minimality for fill_slots_seq Sort Prop

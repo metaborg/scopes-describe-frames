@@ -155,7 +155,9 @@ Inductive wb_decls : ScopeId -> list decl -> Prop :=
                        scopeofDeclP d s'
                      | None => True
                      end)
-    (SRS: forall r, In r rs -> scopeofRefP r s')
+    (SRS: forall r, In r rs ->
+               scopeofRefP r s' /\
+               exists p s'' d', rlookup r p s'' d')
     (WBE: forall e, In e es -> wb_exp e /\ expScope e = s')
     (PARENT: match optr with
              | Some r =>
